@@ -48,9 +48,10 @@
         }
 
         #video {
-            width: 100%;
-            height: auto;
+            width: 320px;
+            height: 240px;
             margin-top: 20px;
+            background-color: #000;
         }
 
         button {
@@ -61,6 +62,22 @@
             color: white;
             border: none;
             margin-top: 20px;
+        }
+
+        #capturedImage {
+            margin-top: 20px;
+            width: 320px;
+            height: 240px;
+            display: none;
+        }
+
+        .download-button {
+            margin-top: 20px;
+        }
+
+        .download-button img {
+            width: 30px;
+            height: 30px;
         }
     </style>
 </head>
@@ -74,6 +91,14 @@
         <p>This is an informational page.</p>
         <button onclick="openCamera()">Camera</button>
         <video id="video" autoplay></video>
+        <button onclick="capturePhoto()">Capture</button>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <img id="capturedImage" alt="Captured Photo" />
+        <div class="download-button" style="display: none;">
+            <a id="downloadLink" href="#" download="captured-photo.jpg">
+                <img src="https://cdn-icons-png.flaticon.com/512/105/105222.png" alt="Download" />
+            </a>
+        </div>
     </main>
 
     <footer>
@@ -81,10 +106,13 @@
     </footer>
 
     <script>
+        let stream;
+
         function openCamera() {
             // Request the user's camera
             navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
+                .then(function(s) {
+                    stream = s;
                     const video = document.getElementById('video');
                     video.srcObject = stream;
                 })
@@ -92,6 +120,36 @@
                     console.error('Error accessing camera: ', error);
                     alert('Unable to access the camera.');
                 });
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const capturedImage = document.getElementById('capturedImage');
+            const downloadButton = document.querySelector('.download-button');
+            const downloadLink = document.getElementById('downloadLink');
+
+            // Set canvas size equal to video size
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Draw the video frame to the canvas
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Get the image data from the canvas
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // Show captured image
+            capturedImage.src = imageData;
+            capturedImage.style.display = 'block';
+
+            // Show download button and link to captured image
+            downloadButton.style.display = 'block';
+            downloadLink.href = imageData;
+            
+            // Stop the camera stream after capturing
+            stream.getTracks().forEach(track => track.stop());
         }
     </script>
 </body>
