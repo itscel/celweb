@@ -11,11 +11,10 @@
             height: 100%;
             font-family: Arial, sans-serif;
             background-color: #fffde7; /* Very light pastel yellow */
-        }
-
-        body {
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
         }
 
@@ -23,6 +22,9 @@
             background-color: #000; /* Black header */
             color: white;
             padding: 15px 20px;
+            width: 100%;
+            position: absolute;
+            top: 0;
         }
 
         .header-title {
@@ -32,7 +34,11 @@
 
         main {
             flex: 1;
-            margin-top: 20px;
+            margin-top: 80px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         footer {
@@ -40,6 +46,8 @@
             padding: 20px 0;
             background-color: #333; /* Dark grey footer */
             color: white;
+            position: absolute;
+            bottom: 0;
         }
 
         .footer-text {
@@ -50,8 +58,10 @@
         #video {
             width: 320px;
             height: 240px;
-            margin-top: 20px;
             background-color: #000;
+            display: none;
+            margin-bottom: 20px;
+            position: relative;
         }
 
         button {
@@ -91,22 +101,23 @@
 
         .photo-template {
             display: grid;
-            grid-template-columns: repeat(3, 1.7fr);
+            grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(2, 1.7fr);
             gap: 10px;
-            justify-items: center;
-            width: 510px;
-            height: 340px;
-            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+            height: auto;
+            margin-top: 20px;
             background-color: #fff;
             padding: 20px;
             position: relative;
         }
 
         .photo-template img {
-            width: 1.7in;
-            height: 1.5in;
+            width: 4in;
+            height: 6in;
             object-fit: cover;
+            margin: 0;
         }
 
         .color-circle {
@@ -122,6 +133,20 @@
         .pastel-blue { background-color: #a2d5f2; }
         .pastel-purple { background-color: #d0b0e4; }
         .pastel-green { background-color: #b8e2d9; }
+
+        .flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            opacity: 0.6;
+            z-index: 10;
+            pointer-events: none;
+            display: none;
+        }
+
     </style>
 </head>
 <body>
@@ -136,7 +161,10 @@
         <button id="cameraButton" onclick="openCamera()">Camera</button>
         <button id="captureButton" onclick="capturePhoto()">Capture</button>
 
-        <video id="video" autoplay style="display: none;"></video>
+        <div id="videoWrapper" style="position: relative;">
+            <video id="video" autoplay></video>
+            <div id="flash" class="flash"></div>
+        </div>
 
         <div id="photoTemplate" class="photo-template" style="display: none;">
             <img id="photo1" src="" alt="Photo 1" />
@@ -173,12 +201,11 @@
         let capturedPhotos = [];
 
         function openCamera() {
-            // Show video element and capture button, hide camera button
             document.getElementById('cameraButton').style.display = 'none';
             document.getElementById('captureButton').style.display = 'block';
             document.getElementById('video').style.display = 'block';
+            document.getElementById('flash').style.display = 'none';
 
-            // Request the user's camera
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function(s) {
                     stream = s;
@@ -202,24 +229,26 @@
             const capturedImage = canvas.getContext('2d');
             const photoTemplate = document.getElementById('photoTemplate');
 
-            // Set canvas size equal to video size
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
 
-            // Draw the video frame to the canvas
             capturedImage.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // Get the image data from the canvas
             const imageData = canvas.toDataURL('image/jpeg');
-
-            // Store the captured photo
             capturedPhotos.push(imageData);
 
-            // Update photo template
             document.getElementById(`photo${photoCount + 1}`).src = imageData;
 
-            // Increase photo count
             photoCount++;
+            showFlash();
+        }
+
+        function showFlash() {
+            const flash = document.getElementById('flash');
+            flash.style.display = 'block';
+            setTimeout(() => {
+                flash.style.display = 'none';
+            }, 200);
         }
 
         function replaceCameraWithTemplate() {
