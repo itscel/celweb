@@ -10,7 +10,7 @@
             text-align: center;
             margin-top: 50px;
             position: relative;
-            height: 100vh;
+            min-height: 100vh;
         }
         .counter {
             font-size: 24px;
@@ -29,12 +29,39 @@
             max-width: 200px;
             height: auto;
         }
+
+        /* Footer styling */
+        footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            padding: 20px 0;
+            background-color: #f1f1f1;
+            margin-top: 50px;
+        }
+        .social-links {
+            margin-bottom: 10px;
+        }
+        .social-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .social-links img {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+        }
+        .footer-text {
+            font-size: 14px;
+            color: #555;
+        }
     </style>
 </head>
 <body>
     <h1>Welcome, everyone!</h1>
     <p>Hi, my name is Ceril Heyrosa. hehehehe...</p>
-    <p>te kent bahog utot. thanksy</p>
+    <p>te kent bahog utot. thanks</p>
 
     <div class="smiski">
         <img src="https://smiski.com/wp-content/uploads/2016/03/smiski_glows.gif" alt="Smiski Glows">
@@ -45,6 +72,19 @@
         <button id="clickButton" onclick="incrementCounter()">Click me!</button>
     </div>
 
+    <footer>
+        <div class="social-links">
+            <span>Follow me:</span>
+            <a href="https://www.instagram.com/cerilheyrosa/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+            </a>
+            <a href="https://www.facebook.com/ceril.besabella/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/145/145802.png" alt="Facebook">
+            </a>
+        </div>
+        <div class="footer-text">All rights reserved to cerilheyrosa</div>
+    </footer>
+
     <script>
         let count = 0;
 
@@ -52,7 +92,6 @@
             count++;
             document.getElementById('clickCount').innerText = count;
 
-            // Move the button randomly
             const button = document.getElementById('clickButton');
             const maxX = window.innerWidth - button.offsetWidth;
             const maxY = window.innerHeight - button.offsetHeight;
