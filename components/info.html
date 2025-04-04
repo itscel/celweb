@@ -73,12 +73,55 @@
 
         .download-button {
             margin-top: 20px;
+            display: none;
         }
 
         .download-button img {
             width: 30px;
             height: 30px;
         }
+
+        #captureButton {
+            display: none;
+        }
+
+        #cameraButton {
+            display: block;
+        }
+
+        .photo-template {
+            display: grid;
+            grid-template-columns: repeat(3, 1.7fr);
+            grid-template-rows: repeat(2, 1.7fr);
+            gap: 10px;
+            justify-items: center;
+            width: 510px;
+            height: 340px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            position: relative;
+        }
+
+        .photo-template img {
+            width: 1.7in;
+            height: 1.5in;
+            object-fit: cover;
+        }
+
+        .color-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .pastel-yellow { background-color: #fffde7; }
+        .pastel-blue { background-color: #a2d5f2; }
+        .pastel-purple { background-color: #d0b0e4; }
+        .pastel-green { background-color: #b8e2d9; }
     </style>
 </head>
 <body>
@@ -89,15 +132,33 @@
     <main>
         <h1>Hello, welcome to info!</h1>
         <p>This is an informational page.</p>
-        <button onclick="openCamera()">Camera</button>
-        <video id="video" autoplay></video>
-        <button onclick="capturePhoto()">Capture</button>
-        <canvas id="canvas" style="display: none;"></canvas>
-        <img id="capturedImage" alt="Captured Photo" />
-        <div class="download-button" style="display: none;">
-            <a id="downloadLink" href="#" download="captured-photo.jpg">
+
+        <button id="cameraButton" onclick="openCamera()">Camera</button>
+        <button id="captureButton" onclick="capturePhoto()">Capture</button>
+
+        <video id="video" autoplay style="display: none;"></video>
+
+        <div id="photoTemplate" class="photo-template" style="display: none;">
+            <img id="photo1" src="" alt="Photo 1" />
+            <img id="photo2" src="" alt="Photo 2" />
+            <img id="photo3" src="" alt="Photo 3" />
+            <img id="photo4" src="" alt="Photo 4" />
+            <img id="photo5" src="" alt="Photo 5" />
+            <img id="photo6" src="" alt="Photo 6" />
+        </div>
+
+        <div class="download-button">
+            <a id="downloadLink" href="#" download="captured-photos.jpg">
                 <img src="https://cdn-icons-png.flaticon.com/512/105/105222.png" alt="Download" />
             </a>
+        </div>
+
+        <div>
+            <span>Background Color:</span>
+            <span class="color-circle pastel-yellow" onclick="changeBackgroundColor('#fffde7')"></span>
+            <span class="color-circle pastel-blue" onclick="changeBackgroundColor('#a2d5f2')"></span>
+            <span class="color-circle pastel-purple" onclick="changeBackgroundColor('#d0b0e4')"></span>
+            <span class="color-circle pastel-green" onclick="changeBackgroundColor('#b8e2d9')"></span>
         </div>
     </main>
 
@@ -107,8 +168,16 @@
 
     <script>
         let stream;
+        let photoCount = 0;
+        const maxPhotos = 6;
+        let capturedPhotos = [];
 
         function openCamera() {
+            // Show video element and capture button, hide camera button
+            document.getElementById('cameraButton').style.display = 'none';
+            document.getElementById('captureButton').style.display = 'block';
+            document.getElementById('video').style.display = 'block';
+
             // Request the user's camera
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function(s) {
@@ -123,33 +192,46 @@
         }
 
         function capturePhoto() {
+            if (photoCount >= maxPhotos) {
+                replaceCameraWithTemplate();
+                return;
+            }
+
             const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const capturedImage = document.getElementById('capturedImage');
-            const downloadButton = document.querySelector('.download-button');
-            const downloadLink = document.getElementById('downloadLink');
+            const canvas = document.createElement('canvas');
+            const capturedImage = canvas.getContext('2d');
+            const photoTemplate = document.getElementById('photoTemplate');
 
             // Set canvas size equal to video size
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
 
             // Draw the video frame to the canvas
-            const context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            capturedImage.drawImage(video, 0, 0, canvas.width, canvas.height);
 
             // Get the image data from the canvas
             const imageData = canvas.toDataURL('image/jpeg');
 
-            // Show captured image
-            capturedImage.src = imageData;
-            capturedImage.style.display = 'block';
+            // Store the captured photo
+            capturedPhotos.push(imageData);
 
-            // Show download button and link to captured image
-            downloadButton.style.display = 'block';
-            downloadLink.href = imageData;
-            
-            // Stop the camera stream after capturing
-            stream.getTracks().forEach(track => track.stop());
+            // Update photo template
+            document.getElementById(`photo${photoCount + 1}`).src = imageData;
+
+            // Increase photo count
+            photoCount++;
+        }
+
+        function replaceCameraWithTemplate() {
+            const video = document.getElementById('video');
+            video.style.display = 'none';
+            document.getElementById('photoTemplate').style.display = 'grid';
+            document.getElementById('captureButton').style.display = 'none';
+            document.getElementById('downloadLink').style.display = 'block';
+        }
+
+        function changeBackgroundColor(color) {
+            document.getElementById('photoTemplate').style.backgroundColor = color;
         }
     </script>
 </body>
