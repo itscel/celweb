@@ -18,9 +18,35 @@
             text-align: center;
         }
 
+        header {
+            position: sticky;
+            top: 0;
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-info {
+            font-size: 14px;
+        }
+
+        .header-info a {
+            color: #00aced;
+            text-decoration: none;
+        }
+
         main {
             flex: 1;
-            margin-top: 50px;
+            margin-top: 20px;
         }
 
         .counter {
@@ -44,7 +70,6 @@
             height: auto;
         }
 
-        /* Sticky Footer */
         footer {
             width: 100%;
             padding: 20px 0;
@@ -74,6 +99,13 @@
     </style>
 </head>
 <body>
+    <header>
+        <div class="header-title">Cel's World</div>
+        <div class="header-info">
+            <a href="components/info.html">More Info</a>
+        </div>
+    </header>
+
     <main>
         <h1>Welcome, everyone!</h1>
         <p>Hi, my name is Ceril Heyrosa. hehehehe...</p>
@@ -83,9 +115,8 @@
             <img src="https://smiski.com/wp-content/uploads/2016/03/smiski_glows.gif" alt="Smiski Glows">
         </div>
 
-        <!-- Message appears here after 5 clicks -->
         <p id="message" style="display: none; font-weight: bold; color: red; margin-top: 10px;">
-            You reached 5 clicks! Tama na! Clicking abuse 😤
+            You reached 5 clicks! Tama na! Clicking abuse 😠
         </p>
 
         <div class="counter">
@@ -125,8 +156,8 @@
             button.style.top = `${randomY}px`;
 
             if (count === 5) {
-                button.remove(); // Remove the button
-                document.getElementById('message').style.display = 'block'; // Show message
+                button.remove();
+                document.getElementById('message').style.display = 'block';
             }
         }
     </script>
