@@ -1,11 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Info Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info Page</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #fffde7; /* Very light pastel yellow */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        header {
+            background-color: #000; /* Black header */
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            margin-top: 20px;
+        }
+
+        footer {
+            width: 100%;
+            padding: 20px 0;
+            background-color: #333; /* Dark grey footer */
+            color: white;
+        }
+
+        .footer-text {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        #video {
+            width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            border: none;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Hello, welcome to info!</h1>
+    <header>
+        <div class="header-title">Cel's World - Info</div>
+    </header>
+
+    <main>
+        <h1>Hello, welcome to info!</h1>
+        <p>This is an informational page.</p>
+        <button onclick="openCamera()">Camera</button>
+        <video id="video" autoplay></video>
+    </main>
+
+    <footer>
+        <div class="footer-text">All rights reserved to cerilheyrosa</div>
+    </footer>
+
+    <script>
+        function openCamera() {
+            // Request the user's camera
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    const video = document.getElementById('video');
+                    video.srcObject = stream;
+                })
+                .catch(function(error) {
+                    console.error('Error accessing camera: ', error);
+                    alert('Unable to access the camera.');
+                });
+        }
+    </script>
 </body>
 </html>
