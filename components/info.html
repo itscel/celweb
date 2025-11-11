@@ -1,267 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Info Page</title>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: Arial, sans-serif;
-            background-color: #fffde7; /* Very light pastel yellow */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Info Page</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #fffde7;
+      display: flex;
+      flex-direction: column;
+    }
 
-        header {
-            background-color: #000; /* Black header */
-            color: white;
-            padding: 15px 20px;
-            width: 100%;
-            position: absolute;
-            top: 0;
-        }
+    header {
+      background-color: #000;
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
 
-        .header-title {
-            font-size: 24px;
-            font-weight: bold;
-        }
+    main {
+      flex: 1;
+      display: flex;
+      width: 100%;
+    }
 
-        main {
-            flex: 1;
-            margin-top: 80px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    /* Left side - camera controls */
+    .left-side {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #fdfdfd;
+      border-right: 2px solid #ccc;
+      padding: 20px;
+    }
 
-        footer {
-            width: 100%;
-            padding: 20px 0;
-            background-color: #333; /* Dark grey footer */
-            color: white;
-            position: absolute;
-            bottom: 0;
-        }
+    .right-side {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
-        .footer-text {
-            font-size: 14px;
-            color: #ccc;
-        }
+    video {
+      width: 320px;
+      height: 240px;
+      background-color: #000;
+      display: none;
+    }
 
-        #video {
-            width: 320px;
-            height: 240px;
-            background-color: #000;
-            display: none;
-            margin-bottom: 20px;
-            position: relative;
-        }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #333;
+      color: white;
+      border: none;
+      margin-top: 15px;
+    }
 
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #333;
-            color: white;
-            border: none;
-            margin-top: 20px;
-        }
+    .color-picker {
+      margin-top: 20px;
+    }
 
-        #capturedImage {
-            margin-top: 20px;
-            width: 320px;
-            height: 240px;
-            display: none;
-        }
+    .color-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin: 5px;
+      display: inline-block;
+      cursor: pointer;
+      border: 1px solid #999;
+    }
 
-        .download-button {
-            margin-top: 20px;
-            display: none;
-        }
+    .pastel-yellow { background-color: #fffde7; }
+    .pastel-blue { background-color: #a2d5f2; }
+    .pastel-purple { background-color: #d0b0e4; }
+    .pastel-green { background-color: #b8e2d9; }
 
-        .download-button img {
-            width: 30px;
-            height: 30px;
-        }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 10px;
+      width: 6in;
+      height: 9in;
+      background-color: #fffde7;
+      padding: 0.5in;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+    }
 
-        #captureButton {
-            display: none;
-        }
+    .photo-grid img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-color: white;
+    }
 
-        #cameraButton {
-            display: block;
-        }
+    .download-button {
+      margin-top: 20px;
+      display: none;
+    }
 
-        .photo-template {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 1.7fr);
-            gap: 10px;
-            width: 90%;
-            max-width: 600px;
-            height: auto;
-            margin-top: 20px;
-            background-color: #fff;
-            padding: 20px;
-            position: relative;
-        }
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 14px;
+    }
 
-        .photo-template img {
-            width: 4in;
-            height: 6in;
-            object-fit: cover;
-            margin: 0;
-        }
-
-        .color-circle {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin: 5px;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .pastel-yellow { background-color: #fffde7; }
-        .pastel-blue { background-color: #a2d5f2; }
-        .pastel-purple { background-color: #d0b0e4; }
-        .pastel-green { background-color: #b8e2d9; }
-
-        .flash {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            opacity: 0.6;
-            z-index: 10;
-            pointer-events: none;
-            display: none;
-        }
-
-    </style>
+    .flash {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      opacity: 0.6;
+      z-index: 10;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="header-title">Cel's World - Info</div>
-    </header>
+  <header>Cel's World - Info</header>
 
-    <main>
-        <h1>Hello, welcome to info!</h1>
-        <p>This is an informational page.</p>
+  <main>
+    <!-- LEFT SIDE -->
+    <div class="left-side">
+      <h2>Camera</h2>
+      <div style="position: relative;">
+        <video id="video" autoplay></video>
+        <div id="flash" class="flash"></div>
+      </div>
 
-        <button id="cameraButton" onclick="openCamera()">Camera</button>
-        <button id="captureButton" onclick="capturePhoto()">Capture</button>
+      <button id="cameraButton" onclick="openCamera()">Open Camera</button>
+      <button id="captureButton" onclick="capturePhoto()" style="display:none;">Capture Photo</button>
 
-        <div id="videoWrapper" style="position: relative;">
-            <video id="video" autoplay></video>
-            <div id="flash" class="flash"></div>
-        </div>
+      <div class="color-picker">
+        <p>Background Color:</p>
+        <span class="color-circle pastel-yellow" onclick="changeBackgroundColor('#fffde7')"></span>
+        <span class="color-circle pastel-blue" onclick="changeBackgroundColor('#a2d5f2')"></span>
+        <span class="color-circle pastel-purple" onclick="changeBackgroundColor('#d0b0e4')"></span>
+        <span class="color-circle pastel-green" onclick="changeBackgroundColor('#b8e2d9')"></span>
+      </div>
+    </div>
 
-        <div id="photoTemplate" class="photo-template" style="display: none;">
-            <img id="photo1" src="" alt="Photo 1" />
-            <img id="photo2" src="" alt="Photo 2" />
-            <img id="photo3" src="" alt="Photo 3" />
-            <img id="photo4" src="" alt="Photo 4" />
-            <img id="photo5" src="" alt="Photo 5" />
-            <img id="photo6" src="" alt="Photo 6" />
-        </div>
+    <!-- RIGHT SIDE -->
+    <div class="right-side">
+      <h2>Captured Photos</h2>
+      <div id="photoGrid" class="photo-grid"></div>
+      <button id="downloadButton" class="download-button" onclick="downloadImage()">Download PNG</button>
+    </div>
+  </main>
 
-        <div class="download-button">
-            <a id="downloadLink" href="#" download="captured-photos.jpg">
-                <img src="https://cdn-icons-png.flaticon.com/512/105/105222.png" alt="Download" />
-            </a>
-        </div>
+  <footer>All rights reserved to cerilheyrosa</footer>
 
-        <div>
-            <span>Background Color:</span>
-            <span class="color-circle pastel-yellow" onclick="changeBackgroundColor('#fffde7')"></span>
-            <span class="color-circle pastel-blue" onclick="changeBackgroundColor('#a2d5f2')"></span>
-            <span class="color-circle pastel-purple" onclick="changeBackgroundColor('#d0b0e4')"></span>
-            <span class="color-circle pastel-green" onclick="changeBackgroundColor('#b8e2d9')"></span>
-        </div>
-    </main>
+  <script>
+    let stream;
+    let photos = [];
+    const maxPhotos = 4;
+    let bgColor = '#fffde7';
 
-    <footer>
-        <div class="footer-text">All rights reserved to cerilheyrosa</div>
-    </footer>
+    function openCamera() {
+      document.getElementById('cameraButton').style.display = 'none';
+      document.getElementById('captureButton').style.display = 'block';
+      const video = document.getElementById('video');
+      video.style.display = 'block';
 
-    <script>
-        let stream;
-        let photoCount = 0;
-        const maxPhotos = 6;
-        let capturedPhotos = [];
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((s) => {
+          stream = s;
+          video.srcObject = stream;
+        })
+        .catch((error) => {
+          alert('Unable to access the camera.');
+          console.error(error);
+        });
+    }
 
-        function openCamera() {
-            document.getElementById('cameraButton').style.display = 'none';
-            document.getElementById('captureButton').style.display = 'block';
-            document.getElementById('video').style.display = 'block';
-            document.getElementById('flash').style.display = 'none';
+    function capturePhoto() {
+      if (photos.length >= maxPhotos) {
+        alert('Maximum of 4 photos reached.');
+        return;
+      }
 
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(s) {
-                    stream = s;
-                    const video = document.getElementById('video');
-                    video.srcObject = stream;
-                })
-                .catch(function(error) {
-                    console.error('Error accessing camera: ', error);
-                    alert('Unable to access the camera.');
-                });
-        }
+      const video = document.getElementById('video');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        function capturePhoto() {
-            if (photoCount >= maxPhotos) {
-                replaceCameraWithTemplate();
-                return;
-            }
+      const imgData = canvas.toDataURL('image/png');
+      photos.push(imgData);
 
-            const video = document.getElementById('video');
-            const canvas = document.createElement('canvas');
-            const capturedImage = canvas.getContext('2d');
-            const photoTemplate = document.getElementById('photoTemplate');
+      updatePhotoGrid();
+      showFlash();
+      document.getElementById('downloadButton').style.display = 'block';
+    }
 
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+    function updatePhotoGrid() {
+      const grid = document.getElementById('photoGrid');
+      grid.innerHTML = '';
+      grid.style.backgroundColor = bgColor;
+      photos.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        grid.appendChild(img);
+      });
+    }
 
-            capturedImage.drawImage(video, 0, 0, canvas.width, canvas.height);
+    function showFlash() {
+      const flash = document.getElementById('flash');
+      flash.style.display = 'block';
+      setTimeout(() => (flash.style.display = 'none'), 200);
+    }
 
-            const imageData = canvas.toDataURL('image/jpeg');
-            capturedPhotos.push(imageData);
+    function changeBackgroundColor(color) {
+      bgColor = color;
+      document.getElementById('photoGrid').style.backgroundColor = color;
+    }
 
-            document.getElementById(`photo${photoCount + 1}`).src = imageData;
+    function downloadImage() {
+      const grid = document.getElementById('photoGrid');
+      html2canvas(grid, { scale: 3 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'photo-grid.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
 
-            photoCount++;
-            showFlash();
-        }
-
-        function showFlash() {
-            const flash = document.getElementById('flash');
-            flash.style.display = 'block';
-            setTimeout(() => {
-                flash.style.display = 'none';
-            }, 200);
-        }
-
-        function replaceCameraWithTemplate() {
-            const video = document.getElementById('video');
-            video.style.display = 'none';
-            document.getElementById('photoTemplate').style.display = 'grid';
-            document.getElementById('captureButton').style.display = 'none';
-            document.getElementById('downloadLink').style.display = 'block';
-        }
-
-        function changeBackgroundColor(color) {
-            document.getElementById('photoTemplate').style.backgroundColor = color;
-        }
-    </script>
+    // Load html2canvas dynamically
+    const script = document.createElement('script');
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+    document.body.appendChild(script);
+  </script>
 </body>
 </html>
