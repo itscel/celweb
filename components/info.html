@@ -232,15 +232,26 @@
       document.getElementById('photoGrid').style.backgroundColor = color;
     }
 
-    function downloadImage() {
-      const grid = document.getElementById('photoGrid');
-      html2canvas(grid, { scale: 3 }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'photo-grid.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      });
-    }
+   function downloadImage() {
+  const grid = document.getElementById('photoGrid');
+
+  // Match display exactly — no extra scaling or cropping
+  html2canvas(grid, {
+    backgroundColor: bgColor, // keep chosen background
+    useCORS: true,
+    scale: 1, // same scale as display
+    width: grid.offsetWidth,
+    height: grid.offsetHeight,
+    scrollX: 0,
+    scrollY: 0,
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'photo-grid.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+}
+
 
     // Load html2canvas dynamically
     const script = document.createElement('script');
